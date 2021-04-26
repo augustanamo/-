@@ -1,2 +1,2 @@
-# augustana.github.io
-网站仿写
+# augustanamo.github.io
+bolg
