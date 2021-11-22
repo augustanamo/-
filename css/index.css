@@ -2416,11 +2416,11 @@ blockquote footer cite:before {
 #footer-wrap {
   position: relative;
   padding: 2rem 1rem;
-  color: #eee;
+  color: #849392;
   text-align: center;
 }
 #footer-wrap a {
-  color: #eee;
+  color: #849392;
   cursor: pointer;
 }
 #footer-wrap a:hover {
@@ -2692,7 +2692,7 @@ _:future,
   z-index: -1;
   width: 0;
   height: 3px;
-  background-color: #80c8f8;
+  background-color: #C8DFDD;
   content: '';
   -webkit-transition: all 0.3s ease-in-out;
   -moz-transition: all 0.3s ease-in-out;
