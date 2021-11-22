@@ -4043,11 +4043,11 @@ function bot_ui_ini() {
 	}).then(function() {
 		botui.message.add({
 			delay: 1100,
-			content: "这里是 cungudafa"
+			content: "这里是 augustanamo"
 		}).then(function() {
 			botui.message.add({
 				delay: 1100,
-				content: "一个可爱的女孩子~"
+				content: "欢迎欢迎~"
 			}).then(function() {
 				botui.action.button({
 					delay: 1600,
@@ -4082,11 +4082,11 @@ function bot_ui_ini() {
 		secondpart = function() {
 			botui.message.add({
 				delay: 1500,
-				content: "就读于重庆交通大学"
+				content: "就读于天津理工大学"
 			}).then(function() {
 				botui.message.add({
 					delay: 1500,
-					content: "是在计算机专业学物联网工程的程序媛"
+					content: "是在软件工程专业的前端"
 				}).then(function() {
 					botui.message.add({
 						delay: 1200,
@@ -4094,20 +4094,20 @@ function bot_ui_ini() {
 					}).then(function() {
 						botui.message.add({
 							delay: 1500,
-							content: "主修 Java 和 Python,略知 linux,偶尔也搞 HTML/CSS/JavaScript/Spring"
+							content: "主修摸鱼,偶尔也搞 HTML/CSS/JavaScript/vue"
 						}).then(function() {
 							botui.message.add({
 								delay: 1500,
-								content: "专业方向，物联网及智能家居(Internet of things)及机器视觉(machine version)"
+								content: "豆瓣资深用户"
 							}).then(function() {
 								botui.message.add({
 									delay: 1800,
-									content: "喜欢看韩剧和玩手游"
+									content: "喜欢看剧和音乐"
 								}).then(function() {
 									botui.action.button({
 										delay: 1100,
 										action: [{
-											text: "为什么叫cungudafa呢？🤔",
+											text: "为什么叫augustanamo呢？🤔",
 											value: "why-mashiro"
 										}]
 									}).then(function(a) {
@@ -4123,7 +4123,7 @@ function bot_ui_ini() {
 		thirdpart = function() {
 			botui.message.add({
 				delay: 1e3,
-				content: "cungudafa是村姑大发的拼音，大发在韩语发音中时很厉害的意思。"
+				content: "augustana是喜欢的一个乐队"
 			}).then(function() {
 				botui.action.button({
 					delay: 1500,
