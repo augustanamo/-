@@ -4128,7 +4128,7 @@ function bot_ui_ini() {
 				botui.action.button({
 					delay: 1500,
 					action: [{
-						text: "为什么叫村姑呢？",
+						text: "喵喵喵喵？",
 						value: "why-cat"
 					}]
 				}).then(function(a) {
@@ -4139,16 +4139,16 @@ function bot_ui_ini() {
 		fourthpart = function() {
 			botui.message.add({
 				delay: 1e3,
-				content: "我的游戏名叫村姑,后来也有人叫我村姑学姐 "
+				content: "喵喵喵喵喵喵喵喵 "
 			}).then(function() {
 				botui.message.add({
 					delay: 1100,
-					content: "希望自己打游戏很厉害吧，哈哈哈"
+					content: "喵喵喵喵"
 				}).then(function() {
 					botui.action.button({
 						delay: 1500,
 						action: [{
-							text: "域名有什么含义吗？",
+							text: "喵喵喵喵？",
 							value: "why-domain"
 						}]
 					}).then(function(a) {
@@ -4160,7 +4160,7 @@ function bot_ui_ini() {
 		fifthpart = function() {
 			botui.message.add({
 				delay: 1e3,
-				content: "emmmm,csdn,github,都是cungudafa哦"
+				content: "喵喵喵喵"
 			}).then(function() {
 				botui.message.add({
 					delay: 1600,
