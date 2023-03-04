@@ -1,0 +1,123 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Chrome浏览器调试工具的使用 | augustanamo</title><meta name="description" content="性能评测工具lighthouse的使用lighthouse 运行的生命周期Lighthouse 运行测评的过程有一套完整的生命周期，可以划分成三个主要流程： Collecting（收集数据）：首先是 Collecting 流程，这一步会调用内置的驱动程序（Driver） ，其作用是通过谷歌开发工具协议（ Chrome DevTools Protocol） 调起浏览器，并创建新的 tab 请求待测评"><meta name="author" content="寇博"><meta name="copyright" content="寇博"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/img/loiter.svg"><link rel="canonical" href="http://augustanamo.github.io/2023/02/04/Chrome/"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin="crossorigin"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="preconnect" href="//zz.bdstatic.com"/><meta property="og:type" content="article"><meta property="og:title" content="Chrome浏览器调试工具的使用"><meta property="og:url" content="http://augustanamo.github.io/2023/02/04/Chrome/"><meta property="og:site_name" content="augustanamo"><meta property="og:description" content="性能评测工具lighthouse的使用lighthouse 运行的生命周期Lighthouse 运行测评的过程有一套完整的生命周期，可以划分成三个主要流程： Collecting（收集数据）：首先是 Collecting 流程，这一步会调用内置的驱动程序（Driver） ，其作用是通过谷歌开发工具协议（ Chrome DevTools Protocol） 调起浏览器，并创建新的 tab 请求待测评"><meta property="og:image" content="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg"><meta property="article:published_time" content="2023-02-04T04:27:10.000Z"><meta property="article:modified_time" content="2023-02-04T04:55:59.577Z"><meta name="twitter:card" content="summary"><script>var activateDarkMode = function () {
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#000')
+  }
+}
+var activateLightMode = function () {
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#fff')
+  }
+}
+
+var getCookies = function (name) {
+  const value = `; ${document.cookie}`
+  const parts = value.split(`; ${name}=`)
+  if (parts.length === 2) return parts.pop().split(';').shift()
+}
+
+var autoChangeMode = 'false'
+var t = getCookies('theme')
+if (autoChangeMode === '1') {
+  var isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+  var isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+  var isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+  var hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+  if (t === undefined) {
+    if (isLightMode) activateLightMode()
+    else if (isDarkMode) activateDarkMode()
+    else if (isNotSpecified || hasNoSupport) {
+      console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+      var now = new Date()
+      var hour = now.getHours()
+      var isNight = hour <= 6 || hour >= 18
+      isNight ? activateDarkMode() : activateLightMode()
+    }
+    window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+      if (Cookies.get('theme') === undefined) {
+        e.matches ? activateDarkMode() : activateLightMode()
+      }
+    })
+  } else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else if (autoChangeMode === '2') {
+  now = new Date()
+  hour = now.getHours()
+  isNight = hour <= 6 || hour >= 18
+  if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else {
+  if (t === 'dark') activateDarkMode()
+  else if (t === 'light') activateLightMode()
+}</script><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css"><link rel="prev" title="手机浏览器调试方法" href="http://augustanamo.github.io/2023/02/21/%E6%89%8B%E6%9C%BA%E6%B5%8F%E8%A7%88%E5%99%A8%E8%B0%83%E8%AF%95%E6%96%B9%E6%B3%95/"><link rel="next" title="前端项目引入外部字体包" href="http://augustanamo.github.io/2022/04/06/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E5%BC%95%E5%85%A5%E5%A4%96%E9%83%A8%E5%AD%97%E4%BD%93%E5%8C%85/"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: {"limitDay":500,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  bookmark: {
+    message_prev: '按',
+    message_next: '键将本页加入书签'
+  },
+  runtime_unit: '天',
+  runtime: false,
+  copyright: undefined,
+  ClickShowText: undefined,
+  medium_zoom: true,
+  fancybox: true,
+  Snackbar: {"bookmark":{"message_prev":"按","message_next":"键将本页加入书签"},"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#121212","position":"bottom-left"},
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  baiduPush: true,
+  highlightCopy: true,
+  highlightLang: true,
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isanchor: false    
+}</script><script>var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isSidebar: true,
+  postUpdate: '2023-02-04 12:55:59'
+}</script><noscript><style>
+#nav {
+  opacity: 1
+}
+.justified-gallery img{
+  opacity: 1
+}
+</style></noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sviptzk/HexoStaticFile@master/Hexo/css/flink.min.css"><meta name="generator" content="Hexo 5.4.0"></head><body><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/img/loiter.svg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">文章</div><div class="length_num">17</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fas fa-list"></i><span> 媒体</span><i class="fas fa-chevron-down menus-expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/movies/"><i class="fa-fw fa fa-film"></i><span> 电影</span></a></li><li><a class="site-page" href="/books/"><i class="fa-fw fas fa-book"></i><span> 书单</span></a></li><li><a class="site-page" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/gallery/"><i class="fa-fw far fa-image"></i><span> 相册</span></a></div><div class="menus_item"><a class="site-page" href="/contact/"><i class="fa-fw far fa-comments"></i><span> 我的项目</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-heart"></i><span> 关于</span></a></div></div></div></div><i class="fas fa-arrow-right on" id="toggle-sidebar"></i><div id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%A7%E8%83%BD%E8%AF%84%E6%B5%8B%E5%B7%A5%E5%85%B7lighthouse%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="toc-number">1.</span> <span class="toc-text">性能评测工具lighthouse的使用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#lighthouse-%E8%BF%90%E8%A1%8C%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="toc-number">1.1.</span> <span class="toc-text">lighthouse 运行的生命周期</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#lighthouse-%E6%8A%A5%E5%91%8A%E7%9A%84%E6%8C%87%E6%A0%87%E5%88%86%E6%9E%90"><span class="toc-number">1.2.</span> <span class="toc-text">lighthouse 报告的指标分析</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%80%A7%E8%83%BD%EF%BC%88Performance%EF%BC%89"><span class="toc-number">1.2.1.</span> <span class="toc-text">性能（Performance）</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#Lighthouse-%E4%BC%9A%E8%A1%A1%E9%87%8F%E4%BB%A5%E4%B8%8B-Metrics-%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87%E9%A1%B9%EF%BC%9A"><span class="toc-number">1.2.1.1.</span> <span class="toc-text">Lighthouse 会衡量以下 Metrics 性能指标项：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%80%A7%E8%83%BD%E8%AF%84%E5%88%86%E6%A0%87%E5%87%86"><span class="toc-number">1.2.1.2.</span> <span class="toc-text">性能评分标准</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%AE%BF%E9%97%AE%E6%97%A0%E9%9A%9C%E7%A2%8D%EF%BC%88Accessibility%EF%BC%89"><span class="toc-number">1.2.2.</span> <span class="toc-text">访问无障碍（Accessibility）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%EF%BC%88%E4%BC%98%E5%8C%96%EF%BC%89%EF%BC%88Best-Practice%EF%BC%89"><span class="toc-number">1.2.3.</span> <span class="toc-text">最佳实践（优化）（Best Practice）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E%E4%BC%98%E5%8C%96%EF%BC%88SEO%EF%BC%89"><span class="toc-number">1.2.4.</span> <span class="toc-text">搜索引擎优化（SEO）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#PWA%EF%BC%88Progressive-Web-App%EF%BC%89"><span class="toc-number">1.2.5.</span> <span class="toc-text">PWA（Progressive Web App）</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%BF%AB%E9%80%9F%E5%8F%AF%E9%9D%A0%EF%BC%9A"><span class="toc-number">1.2.5.1.</span> <span class="toc-text">快速可靠：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%89%8B%E5%8A%A8%E6%B5%8B%E8%AF%95%E9%A1%B9%EF%BC%9A"><span class="toc-number">1.2.5.2.</span> <span class="toc-text">手动测试项：</span></a></li></ol></li></ol></li></ol></li></ol></div></div></div><div id="body-wrap"><div id="web_bg" data-type="photo"></div><header class="post-bg" id="page-header" style="background-image: url(https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg)"><nav id="nav"><span class="pull-left" id="blog_name"><a class="blog_title" id="site-name" href="/">augustanamo</a></span><span class="pull-right menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fas fa-list"></i><span> 媒体</span><i class="fas fa-chevron-down menus-expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/movies/"><i class="fa-fw fa fa-film"></i><span> 电影</span></a></li><li><a class="site-page" href="/books/"><i class="fa-fw fas fa-book"></i><span> 书单</span></a></li><li><a class="site-page" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/gallery/"><i class="fa-fw far fa-image"></i><span> 相册</span></a></div><div class="menus_item"><a class="site-page" href="/contact/"><i class="fa-fw far fa-comments"></i><span> 我的项目</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-heart"></i><span> 关于</span></a></div></div><span class="toggle-menu close"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><div id="post-title"><div class="posttitle">Chrome浏览器调试工具的使用</div></div><div id="post-meta"><div class="meta-firstline"><time class="post-meta__date"><span class="post-meta__date-created" title="发表于 2023-02-04 12:27:10"><i class="far fa-calendar-alt fa-fw"></i> 发表于 2023-02-04</span><span class="post-meta__separator">|</span><span class="post-meta__date-updated" title="更新于 2023-02-04 12:55:59"><i class="fas fa-history fa-fw"></i> 更新于 2023-02-04</span></time></div><div class="meta-secondline"> </div><div class="meta-thirdline"><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta__icon"></i><span>阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout_post" id="content-inner"><article id="post"><div class="post-content" id="article-container"><h3 id="性能评测工具lighthouse的使用"><a href="#性能评测工具lighthouse的使用" class="headerlink" title="性能评测工具lighthouse的使用"></a>性能评测工具lighthouse的使用</h3><h4 id="lighthouse-运行的生命周期"><a href="#lighthouse-运行的生命周期" class="headerlink" title="lighthouse 运行的生命周期"></a>lighthouse 运行的生命周期</h4><p>Lighthouse 运行测评的过程有一套完整的生命周期，可以划分成三个主要流程：</p>
+<p><strong>Collecting（收集数据）</strong>：首先是 Collecting 流程，这一步会调用内置的驱动程序（Driver） ，其作用是通过谷歌开发工具协议（ Chrome DevTools Protocol） 调起浏览器，并创建新的 tab 请求待测评的站点，通过浏览器采集站点数据并将结果（称之为 Artifacts）保存在本地临时目录。</p>
+<p><strong>Auditing（分析数据）</strong>：然后进入 Auditing 流程，读取 Artifacts 数据，根据内置的评判策略逐条进行检查并计算出各项的数字形式得分。</p>
+<p><strong>Report（生成报告）</strong>：最后进行 Report 流程，将评分结果按照 PWA、性能、无障碍访问、最佳实践等纬度进行划分，以 JSON、HTML 等格式输出。</p>
+<h4 id="lighthouse-报告的指标分析"><a href="#lighthouse-报告的指标分析" class="headerlink" title="lighthouse 报告的指标分析"></a>lighthouse 报告的指标分析</h4><p>使用 Lighthouse 对网站进行测评后，我们会得到一份评分报告，它包含了<strong>性能（Performance），访问无障碍（Accessibility），最佳实践（Best Practice），搜索引擎优化（SEO），PWA（Progressive Web App）</strong>五个部分：</p>
+<h5 id="性能（Performance）"><a href="#性能（Performance）" class="headerlink" title="性能（Performance）"></a>性能（Performance）</h5><p>性能评分的分值区间是0到100，如果出现0分，通常是在运行 Lighthouse 时发生了错误，满分100分代表了网站已经达到了98分位值的数据，而50分则是75分位值的数据。</p>
+<p>影响评分的性能指标：性能测试结果会分成 Metrics，Diagnostic，Opportunities 三部分，但只有 Metrics 部分的指标项会对分数产生直接影响。</p>
+<h6 id="Lighthouse-会衡量以下-Metrics-性能指标项："><a href="#Lighthouse-会衡量以下-Metrics-性能指标项：" class="headerlink" title="Lighthouse 会衡量以下 Metrics 性能指标项："></a>Lighthouse 会衡量以下 Metrics 性能指标项：</h6><p>首次内容绘制（First Contentful Paint）。即浏览器首次将任意内容（如文字、图像、canvas 等）绘制到屏幕上的时间点。<br>首次有效绘制（First Meaningful Paint）。衡量了用户感知页面的主要内容（primary content）可见的时间。对于不同的站点，首要内容是不同的，例如：对于博客文章，标题及首屏文字是首要内容，而对于购物网站来说，图片也会变得很重要。<br>首次 CPU 空闲（First CPU Idle）。即页面首次能够对输入做出反应的时间点，其出现时机往往在首次有效绘制完成之后。该指标目前仍处于实验阶段。<br>可交互时间（Time to Interactive）。指的是所有的页面内容都已经成功加载，且能够快速地对用户的操作做出反应的时间点。该指标目前仍处于实验阶段。<br>速度指标（Speed Index）。衡量了首屏可见内容绘制在屏幕上的速度。在首次加载页面的过程中尽量展现更多的内容，往往能给用户带来更好的体验，所以速度指标的值约小越好。<br>输入延迟估值（Estimated Input Latency）。这个指标衡量了页面对用户输入行为的反应速度，其基准值应低于 50ms。<br>Metrics 部分的指标项会直接影响分数，可以作为我们的主要参考点。</p>
+<p>另外的两部分中， Opportunities 指的是优化机会，它提供了详细的建议和文档，来解释低分的原因，帮助我们具体进行实现和改进。Diagnostics 指的是现在存在的问题，为进一步改善性能的实验和调整给出了指导。这两者不会纳入分数的计算。</p>
+<h6 id="性能评分标准"><a href="#性能评分标准" class="headerlink" title="性能评分标准"></a>性能评分标准</h6><p>每一项性能指标对评分的贡献都有其计算逻辑，Lighthouse 会将原始的性能值映射成为 0-100 之间的数字。</p>
+<p>例如，FMP（First Meaningful Paint）的原始值是从页面初始化开始到主要内容渲染成功的耗时，根据真实站点的数据，顶级性能的站点的 FMP 值约为 1220ms，这个值会被映射成 Lighthouse 的 99 分。</p>
+<p>针对不同的评分，Lighthouse 用了不同的颜色进行标注，分值区间和颜色的对应关系如下：</p>
+<p>0 - 49（慢）：红色<br>50 - 89（平均值）： 橙色<br>90 - 100（快）： 绿色<br>各个指标对性能评分的贡献并不相同，权重较大的指标，对性能评分的影响更大一些。各指标权重分配情况可参考：<a target="_blank" rel="noopener" href="https://docs.google.com/spreadsheets/d/1Cxzhy5ecqJCucdf1M0iOzM8mIxNc7mmx107o5nj38Eo/edit#gid=0">https://docs.google.com/spreadsheets/d/1Cxzhy5ecqJCucdf1M0iOzM8mIxNc7mmx107o5nj38Eo/edit#gid=0</a></p>
+<h5 id="访问无障碍（Accessibility）"><a href="#访问无障碍（Accessibility）" class="headerlink" title="访问无障碍（Accessibility）"></a>访问无障碍（Accessibility）</h5><p>访问无障碍评分的分值由相关指标的加权平均值计算而来。可以在评分详情查阅每项指标的具体权重。同理，较大权重的指标项对分数的影响较大。</p>
+<p>无障碍性的每个指标项测试结果为pass或者fail，与性能指标项的计算方式不同，当页面只是部分通过某项指标时，页面的这项指标将不会得分。例如，如果页面中的一些元素有屏幕阅读器友好的命名，而其他的元素没有，那么这个页面的 screenreader-friendly-names 指标项得分为0。</p>
+<h5 id="最佳实践（优化）（Best-Practice）"><a href="#最佳实践（优化）（Best-Practice）" class="headerlink" title="最佳实践（优化）（Best Practice）"></a>最佳实践（优化）（Best Practice）</h5><p>最佳实践评分的分数区间为0-100。影响这项评分的指标项的权重都是相同的。</p>
+<p>比如：推荐使用 https，跨域的跳转链接需要使用 rel 标识，不能使用废弃的 API等等。</p>
+<h5 id="搜索引擎优化（SEO）"><a href="#搜索引擎优化（SEO）" class="headerlink" title="搜索引擎优化（SEO）"></a>搜索引擎优化（SEO）</h5><p>比如：图片元素使用 alt 属性等等提高搜索引擎搜索排名，便于搜索引擎能找到你这个网站。</p>
+<h5 id="PWA（Progressive-Web-App）"><a href="#PWA（Progressive-Web-App）" class="headerlink" title="PWA（Progressive Web App）"></a>PWA（Progressive Web App）</h5><p>Lighthouse 使用 PWA 基准检查项列表（Baseline PWA Checklist）进行测评，测评结果将这些指标项分成了四个类别，共包含12个自动测试项和3个手动测试项，其中各个自动测试项的评分权重是相同的。PWA 的评测指标对我们来说非常重要，我们可以从这四个类别详细了解一下基准指标项。</p>
+<h6 id="快速可靠："><a href="#快速可靠：" class="headerlink" title="快速可靠："></a>快速可靠：</h6><p>页面在移动网络条件下能够快速加载。<br>在离线条件下页面能够返回状态码200。这里我们可以通过 Service Worker 来实现离线可用。<br>start_url 在离线条件下返回状态码200。start_url 是前面章节我们提到过的 manifest.json 中的一个属性，它指定了用户打开该 PWA 时加载的 URL。<br>可安装：</p>
+<p>始终使用 HTTPS。<br>注册 Service Worker 来缓存页面以及 start_url。<br>使用 manifest 文件来实现安装 PWA 的需求，浏览器能够主动通知用户将应用添加到桌面，增加留存率。<br>PWA 优化：</p>
+<p>将 HTTP 流量重定向到 HTTPS。<br>配置自定义启动画面。<br>设置地址栏主题颜色。<br>页面内容针对视口大小自适应，对移动用户的展示更友好。<br>使用了 <meta name="viewport"> 标签，并设置了 width 或 initial-scale 属性。<br>当 JavaScript 文件不可用时，提供降级措施，页面能显示基本内容而不出现白屏。</p>
+<h6 id="手动测试项："><a href="#手动测试项：" class="headerlink" title="手动测试项："></a>手动测试项：</h6><p>站点跨浏览器可用，如主流浏览器 Chrome, Edge, Firefox 及 Safari 等。<br>页面间切换流畅，即使在较差的网络环境下，切换动画也应该简洁顺畅，这是提高用户感知体验的关键。<br>保证每个页面都有独一无二的 URL，能够在新的浏览器窗口打开，且方便在社交媒体上进行分享。</p>
+</div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">寇博</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://augustanamo.github.io/2023/02/04/Chrome/">http://augustanamo.github.io/2023/02/04/Chrome/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://augustanamo.github.io" target="_blank">augustanamo</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"/><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js"></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/02/21/%E6%89%8B%E6%9C%BA%E6%B5%8F%E8%A7%88%E5%99%A8%E8%B0%83%E8%AF%95%E6%96%B9%E6%B3%95/"><img class="prev-cover" data-src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">手机浏览器调试方法</div></div></a></div><div class="next-post pull-right"><a href="/2022/04/06/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E5%BC%95%E5%85%A5%E5%A4%96%E9%83%A8%E5%AD%97%E4%BD%93%E5%8C%85/"><img class="next-cover" data-src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">前端项目引入外部字体包</div></div></a></div></nav></article></main><footer id="footer" data-type="color"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023  <i id="heartbeat" class="fa fas fa-heartbeat"></i> 寇博</div><div class="framework-info"><span>驱动 </span><a target="_blank" rel="noopener" href="https://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly"><span>Butterfly</span></a></div></div><head><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/HCLonely/images@master/others/heartbeat.min.css"></head></footer></div><section id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font_plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font_minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></section><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module" defer></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js" async></script><script src="/js/calendar.js"></script><script src="/js/languages.js"></script></body></html>
